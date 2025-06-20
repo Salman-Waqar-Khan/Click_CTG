@@ -45,5 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('products', AdminProductController::class);
     Route::resource('orders', AdminOrderController::class);
+    Route::patch('/admin/orders/{order}/ship', [AdminOrderController::class, 'ship'])->name('admin.orders.ship');
+
 });
 require __DIR__.'/auth.php';
