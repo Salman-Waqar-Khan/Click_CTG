@@ -8,6 +8,9 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\Admin\AdminProductController;
 
 
 // Frontend
@@ -28,7 +31,8 @@ Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remov
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-    Route::get('/my-orders', [OrderController::class, 'index'])->name('user.orders.index');
+        Route::get('/my-orders', [OrderController::class, 'index'])->name('orders.index'); // Use 'orders.index'
+
 });
 
 // Admin
@@ -37,10 +41,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('/admin/products', AdminProductController::class);
     Route::resource('/admin/orders', AdminOrderController::class);
 }); */
-Route::middleware(['auth', IsAdmin::class])->group(function () {
-    Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-    Route::resource('/admin/products', AdminProductController::class);
-    Route::resource('/admin/orders', AdminOrderController::class);
+ Route::middleware(['auth', IsAdmin::class])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('products', AdminProductController::class);
+    Route::resource('orders', AdminOrderController::class);
 });
-
 require __DIR__.'/auth.php';

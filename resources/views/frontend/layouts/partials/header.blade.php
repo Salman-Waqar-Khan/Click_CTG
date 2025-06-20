@@ -8,7 +8,7 @@
       <ul class="navbar-nav ms-auto">
         @auth
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('user.orders.index') }}">My Orders</a>
+            <a class="nav-link" href="{{ route('orders.index') }}">My Orders</a>
         </li>
         @endauth
         <li class="nav-item"><a class="nav-link" href="{{ route('shop') }}">Shop</a></li>
