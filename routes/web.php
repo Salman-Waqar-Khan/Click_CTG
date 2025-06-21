@@ -41,11 +41,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('/admin/products', AdminProductController::class);
     Route::resource('/admin/orders', AdminOrderController::class);
 }); */
- Route::middleware(['auth', IsAdmin::class])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', IsAdmin::class])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::resource('products', AdminProductController::class);
+    Route::resource('products', AdminProductController::class);  // <-- add this
     Route::resource('orders', AdminOrderController::class);
-    Route::patch('/admin/orders/{order}/ship', [AdminOrderController::class, 'ship'])->name('admin.orders.ship');
-
+    Route::post('orders/{order}/ship', [AdminOrderController::class, 'ship'])->name('orders.ship');
 });
+
+
 require __DIR__.'/auth.php';

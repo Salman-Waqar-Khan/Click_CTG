@@ -1,44 +1,53 @@
 @extends('layouts.admin')
 
-@section('title', 'Orders')
-
 @section('content')
-    <h2>All Orders</h2>
+<div class="container mt-4">
+    <h1>Orders List</h1>
 
-    <table class="table table-bordered">
+    @if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    @if(session('message'))
+    <div class="alert alert-info">{{ session('message') }}</div>
+    @endif
+
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Order ID</th>
                 <th>User</th>
-                <th>Total</th>
                 <th>Status</th>
-                <th>Placed At</th>
-                <th>Actions</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             @forelse($orders as $order)
-                <tr>
-                    <td>{{ $order->id }}</td>
-                    <td>{{ $order->user->name ?? 'N/A' }}</td>
-                    <td>${{ number_format($order->total, 2) }}</td>
-                    <td>{{ ucfirst($order->status) }}</td>
-                    <td>{{ $order->created_at->format('d M Y') }}</td>
-                    <td>
-                        @if($order->status !== 'shipped')
-                            <form method="POST" action="{{ route('admin.orders.ship', $order->id) }}">
-                                @csrf
-                                @method('PATCH')
-                                <button class="btn btn-sm btn-success">Mark as Shipped</button>
-                            </form>
-                        @else
-                            <span class="badge bg-secondary">Shipped</span>
-                        @endif
-                    </td>
-                </tr>
+            <tr>
+                <td>{{ $order->id }}</td>
+                <td>{{ $order->user->name }}</td>
+                <td>{{ ucfirst($order->status) }}</td>
+                <td>
+                    <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-sm btn-primary">View Details</a>
+                    @if($order->status !== 'shipped')
+                        <form action="{{ route('admin.orders.ship', $order->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Mark this order as shipped?')">
+                                Mark as Shipped
+                            </button>
+                        </form>
+                    @else
+                        <span class="badge bg-success">Shipped</span>
+                    @endif
+                </td>
+
+            </tr>
             @empty
-                <tr><td colspan="6">No orders yet.</td></tr>
+            <tr>
+                <td colspan="4" class="text-center">No orders found.</td>
+            </tr>
             @endforelse
         </tbody>
     </table>
+</div>
 @endsection
